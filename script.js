@@ -5,21 +5,23 @@ const wDiv = document.getElementById("key-w");
 const aDiv = document.getElementById("key-a");
 const sDiv = document.getElementById("key-s");
 const dDiv = document.getElementById("key-d");
+const zDiv = document.getElementById("key-z");
 
-const keypressLabel = document.getElementById("keypress-label");
+const keyCodesLabel = document.getElementById("keycodes-pressed-label");
+const debugLabel = document.getElementById("debug-label");
 
 const keyboard = new KeyboardHandler();
-keyboard.addKeys("KeyQ", "KeyW", "KeyA", "KeyS", "KeyD");
+keyboard.addKeys("KeyQ", "KeyW", "KeyA", "KeyS", "KeyD", "KeyZ");
 
 let counter = 0;
 
 // Hold: event will retrigger
 keyboard.addHoldListener("KeyQ", (event) => {
-    keypressLabel.textContent = `q hold: ${++counter}`;
+    keyCodesLabel.textContent = `q hold: ${++counter}`;
 });
 
 keyboard.addReleaseListener("KeyQ", (event) => {
-    keypressLabel.textContent = "";
+    keyCodesLabel.textContent = "";
 });
 
 const assignKeyToDiv = (keyCode, divElement) => {
@@ -40,14 +42,18 @@ assignKeyToDiv("KeyW", wDiv);
 assignKeyToDiv("KeyA", aDiv);
 assignKeyToDiv("KeyS", sDiv);
 assignKeyToDiv("KeyD", dDiv);
+assignKeyToDiv("KeyZ", zDiv);
 
 // All *assigned* keys get the same trigger / release handlers
 keyboard.addTriggerListenerAll((event) => { 
-    keysPressed.add(event.key);
-    keypressLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
+    keyCodesLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
+
+    if (keyCodesLabel.textContent === "KeyW KeyA KeyS KeyD") {
+        debugLabel.textContent = "wasd!";
+    }
 });
 
 keyboard.addReleaseListenerAll((event) => {
-    keysPressed.delete(event.key);
-    keypressLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
+    keyCodesLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
+    debugLabel.textContent = "";
 });

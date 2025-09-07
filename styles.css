@@ -7,12 +7,7 @@
     --border-radius: 4px;
 
     --margin-top: 20px;
-    --margin-left: 40px;
-}
-
-.container {
-    display: flex;
-    gap: 0px;
+    --margin-left: 20px;
 }
 
 body {
@@ -28,6 +23,16 @@ label {
     margin-left: var(--margin-left);
 }
 
+.container,
+.label-container {
+    display: flex;
+    gap: 0px;
+}
+
+.label-container {
+    gap: 10px;
+}
+
 .key {
     color: var(--text-color-darker);
     user-select: none;
@@ -37,6 +42,9 @@ label {
     border-radius: var(--border-radius);
     border-color: var(--background-darker);
     border-width: 1px;
+
+    width: 20px;
+    height: 30px;
 
     transition: all 0.3s ease;
 }
