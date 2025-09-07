@@ -49,11 +49,20 @@ export class KeyHandler {
 export default class KeyboardHandler {
     #context
     #keyHandlers
+    #keysPressed
+    #keysHeld
 
     constructor (context = undefined) {
         this.#keyHandlers = new Map();
+        this.#keysPressed = new Set();
+        this.#keysHeld = new Set();
+
         this.#context = context ? context : window;
     }
+
+    get keysPressed () { return this.#keysPressed; }
+
+    get keysHeld () { return this.#keysHeld; }
 
     addKeys (...keyCodes) {
         keyCodes.forEach((keyCode) => {
@@ -62,34 +71,42 @@ export default class KeyboardHandler {
     }
 
     addTriggerListener (keyCode, callbackFn) {
-        this.#keyHandlers.get(keyCode).addTriggerListener(callbackFn);
+        this.#keyHandlers.get(keyCode).addTriggerListener((event) => {
+            this.#keysPressed.add(keyCode);
+            callbackFn(event);
+        });
     }
 
     addTriggerListenerAll (callbackFn) {
-        // `(key, keyCode)` is `(value, key)`, but we have a different meaning for `key` here...
         this.#keyHandlers.forEach((keyHandler, keyCode) => {
-            keyHandler.addTriggerListener(callbackFn);
+            this.addTriggerListener(keyCode, callbackFn);
         });
     }
 
     addHoldListener (keyCode, callbackFn) {
-        this.#keyHandlers.get(keyCode).addHoldListener(callbackFn);
+        this.#keyHandlers.get(keyCode).addHoldListener((event) => {
+            this.#keysHeld.add(keyCode);
+            callbackFn(event);
+        });
     }
 
     addHoldListenerAll (callbackFn) {
         this.#keyHandlers.forEach((keyHandler, keyCode) => {
-            keyHandler.addHoldListener(callbackFn);
+            this.addHoldListener(callbackFn);
         });
     }
 
     addReleaseListener (keyCode, callbackFn) {
-        this.#keyHandlers.get(keyCode).addReleaseListener(callbackFn);
+        this.#keyHandlers.get(keyCode).addReleaseListener((event) => {
+            this.#keysPressed.delete(keyCode);
+            if (this.#keysHeld.has(keyCode)) this.#keysHeld.delete(keyCode);
+            callbackFn(event);
+        });
     }
 
     addReleaseListenerAll (callbackFn) {
-        // `(key, keyCode)` is `(value, key)`, but we have a different meaning for `key` here...
         this.#keyHandlers.forEach((keyHandler, keyCode) => {
-            keyHandler.addReleaseListener(callbackFn);
+            this.addReleaseListener(keyCode, callbackFn);
         });
     }
 }

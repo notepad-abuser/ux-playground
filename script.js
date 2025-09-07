@@ -42,14 +42,12 @@ assignKeyToDiv("KeyS", sDiv);
 assignKeyToDiv("KeyD", dDiv);
 
 // All *assigned* keys get the same trigger / release handlers
-const keysPressed = new Set();
-
 keyboard.addTriggerListenerAll((event) => { 
     keysPressed.add(event.key);
-    keypressLabel.textContent = Array.from(keysPressed).join(" ");
+    keypressLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
 });
 
 keyboard.addReleaseListenerAll((event) => {
     keysPressed.delete(event.key);
-    keypressLabel.textContent = Array.from(keysPressed).join(" ");
+    keypressLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
 });
