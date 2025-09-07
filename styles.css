@@ -1,0 +1,53 @@
+:root {
+    --background: rgb(40, 40, 50);
+    --background-darker: rgb(30, 30, 40);
+    --text-color: rgb(160, 160, 160);
+    --text-color-darker: rgb(80, 80, 100);
+
+    --border-radius: 4px;
+
+    --margin-top: 20px;
+    --margin-left: 40px;
+}
+
+.container {
+    display: flex;
+    gap: 0px;
+}
+
+body {
+    background-color: var(--background);
+    
+    color: var(--text-color);
+    font-family: monospace;
+}
+
+label {
+    user-select: none;
+    margin-top: var(--margin-top);
+    margin-left: var(--margin-left);
+}
+
+.key {
+    color: var(--text-color-darker);
+    user-select: none;
+    margin-left: var(--margin-left);
+    padding: 8px 8px;
+    border-style: solid;
+    border-radius: var(--border-radius);
+    border-color: var(--background-darker);
+    border-width: 1px;
+
+    transition: all 0.3s ease;
+}
+
+.key-assigned {
+    color: var(--text-color);
+}
+
+.key-pressed {
+    display: inline-block;
+    color: white;
+    border-color: rgb(130, 130, 18);
+    transition: all 0.0s ease;
+}
