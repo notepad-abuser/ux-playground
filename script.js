@@ -1,4 +1,8 @@
+console.log("hello from script");
+
 import KeyboardHandler from "/classes/keyhandler.js";
+
+console.log("imported KeyboardHandler");
 
 const qDiv = document.getElementById("key-q");
 const wDiv = document.getElementById("key-w");
