@@ -75,11 +75,11 @@ export default class KeyboardHandler {
 
         this.#keysPressed.add(keyCode);
 
-        if (!event.repeat) {
+        if (event.repeat) {
+            keyObject.onHold.forEach(callbackFn => callbackFn(event));
+        } else {
             keyObject.onTrigger.forEach(callbackFn => callbackFn(event));
         }
-
-        keyObject.onHold.forEach(callbackFn => callbackFn(event));
     }
 
     #handleKeyup = (event) => {
