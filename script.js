@@ -1,4 +1,4 @@
-import KeyboardHandler from "/classes/keyhandler.js";
+import KeyboardHandler from "./classes/keyhandler.js";
 
 console.log("?");
 
