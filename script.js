@@ -59,3 +59,7 @@ keyboard.addReleaseListenerAll((event) => {
     keyCodesLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
     debugLabel.textContent = "";
 });
+
+window.addEventListener("keydown", (event) => {
+    debugLabel.textContent = event.code;
+})
