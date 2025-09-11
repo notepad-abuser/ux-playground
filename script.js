@@ -57,9 +57,9 @@ keyboard.addTriggerListenerAll((event) => {
 
 keyboard.addReleaseListenerAll((event) => {
     keyCodesLabel.textContent = Array.from(keyboard.keysPressed).join(" ");
-    debugLabel.textContent = "";
+    //debugLabel.textContent = "";
 });
 
-window.addEventListener("keydown", (event) => {
-    debugLabel.textContent = event.code;
-})
+window.addEventListener("keydown", () => {
+    debugLabel.textContent = keyboard.lastKeyPressed;
+});

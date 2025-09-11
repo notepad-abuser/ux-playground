@@ -2,50 +2,56 @@ export function hello () {
     console.log("hello from keyhandler.js");
 }
 
+class Key {
+    constructor () {
+        this.onTrigger = new Set();
+        this.onHold = new Set();
+        this.onRelease = new Set();
+    }            
+}
+
 export default class KeyboardHandler {
     #keys
     #keysPressed
+    #lastKeyPressed
+
     #context
 
     constructor (context = undefined) {
         this.#keys = new Map();
         this.#keysPressed = new Set();
+        this.#lastKeyPressed = null;
 
-        this.#context = context ? context : window;
+        this.#context = context ?? window;
         this.#context.addEventListener("keydown", this.#handleKeydown); // TODO: understand 'this'
         this.#context.addEventListener("keyup", this.#handleKeyup); // TODO: understand 'this'
     }
 
     get keysPressed () { return this.#keysPressed; }
+    get lastKeyPressed () { return this.#lastKeyPressed; }
 
-    #assertKeyInKeys (keyCode) {
-        if (!this.#keys.has(keyCode)) throw new Error(`'${keyCode}' not in #keys`);
+    #ensureKey (keyCode) {
+        if (!this.#keys.has(keyCode)) this.#keys.set(keyCode, new Key());
     }
 
     addKeys (...keyCodes) {
         keyCodes.forEach((keyCode) => {
-            const keyObject = {
-                onTrigger: new Set(),
-                onHold: new Set(),
-                onRelease: new Set()
-            }
-
-            this.#keys.set(keyCode, keyObject);
+            this.#keys.set(keyCode, new Key());
         });
     }
 
     addTriggerListener (keyCode, callbackFn) {
-        this.#assertKeyInKeys(keyCode);
+        this.#ensureKey(keyCode);
         this.#keys.get(keyCode).onTrigger.add(callbackFn);
     }
 
     addHoldListener (keyCode, callbackFn) {
-        this.#assertKeyInKeys(keyCode);
+        this.#ensureKey(keyCode);
         this.#keys.get(keyCode).onHold.add(callbackFn);
     }
 
     addReleaseListener (keyCode, callbackFn) {
-        this.#assertKeyInKeys(keyCode);
+        this.#ensureKey(keyCode);
         this.#keys.get(keyCode).onRelease.add(callbackFn);
     }
 
@@ -69,10 +75,11 @@ export default class KeyboardHandler {
 
     #handleKeydown = (event) => {
         const keyCode = event.code;
-
         const keyObject = this.#keys.get(keyCode);
+
         if (!keyObject) return;
 
+        this.#lastKeyPressed = keyCode;
         this.#keysPressed.add(keyCode);
 
         if (event.repeat) {
@@ -84,8 +91,8 @@ export default class KeyboardHandler {
 
     #handleKeyup = (event) => {
         const keyCode = event.code;
-
         const keyObject = this.#keys.get(keyCode);
+
         if (!keyObject) return;
 
         this.#keysPressed.delete(keyCode);
